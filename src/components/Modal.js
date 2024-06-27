@@ -18,6 +18,7 @@ const ResultModal = ({
   correctWords,
   handleRestart,
   getResultMessage,
+  timer,
 }) => {
   return (
     <Modal open={open} onClose={() => setOpen(false)}>
@@ -73,7 +74,7 @@ const ResultModal = ({
               Mistakes: {mistakes}
             </Typography>
             <Typography variant='body1' sx={{ mb: 2 }}>
-              Words per minute: {correctWords}
+              Words per {timer / 60} min: {correctWords}
             </Typography>
             <Button variant='contained' color='primary' onClick={handleRestart}>
               Try Again
