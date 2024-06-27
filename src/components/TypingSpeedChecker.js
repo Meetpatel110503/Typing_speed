@@ -1,17 +1,21 @@
 import React, { useState, useEffect, useRef } from "react"
+import { useParams, useLocation, useNavigate } from "react-router-dom"
 import { Box, Button, Typography } from "@mui/material"
 import AccessTimeIcon from "@mui/icons-material/AccessTime"
 import { paragraphs } from "../data"
 import ResultModal from "./Modal"
 import ShowResult from "./ShowResult"
+import ArrowBackIcon from "@mui/icons-material/ArrowBack"
 
 const TypingSpeedChecker = () => {
-  const [textToType, setTextToType] = useState(
-    paragraphs[Math.floor(Math.random() * paragraphs.length)]
-  )
+  const { difficulty } = useParams()
+  const location = useLocation()
+  const navigate = useNavigate()
+  const timer = new URLSearchParams(location.search).get("timer")
+  const [textToType, setTextToType] = useState("")
   const [typedText, setTypedText] = useState("")
   const [startTime, setStartTime] = useState(null)
-  const [timeLeft, setTimeLeft] = useState(60)
+  const [timeLeft, setTimeLeft] = useState(Number(timer))
   const [isFinished, setIsFinished] = useState(false)
   const [mistakes, setMistakes] = useState(0)
   const [open, setOpen] = useState(false)
@@ -19,6 +23,14 @@ const TypingSpeedChecker = () => {
   const [wordsTyped, setWordsTyped] = useState(0)
   const [correctWords, setCorrectWords] = useState(0)
   const inputRef = useRef(null)
+
+  useEffect(() => {
+    setTextToType(
+      paragraphs[difficulty][
+        Math.floor(Math.random() * paragraphs[difficulty].length)
+      ]
+    )
+  }, [difficulty])
 
   const words = textToType.split(" ")
 
@@ -73,10 +85,14 @@ const TypingSpeedChecker = () => {
   }
 
   const handleRestart = () => {
-    setTextToType(paragraphs[Math.floor(Math.random() * paragraphs.length)])
+    setTextToType(
+      paragraphs[difficulty][
+        Math.floor(Math.random() * paragraphs[difficulty].length)
+      ]
+    )
     setTypedText("")
     setStartTime(null)
-    setTimeLeft(60)
+    setTimeLeft(Number(timer))
     setIsFinished(false)
     setMistakes(0)
     setCurrentWordIndex(0)
@@ -84,6 +100,10 @@ const TypingSpeedChecker = () => {
     setCorrectWords(0)
     setOpen(false)
     inputRef.current.focus()
+  }
+
+  const handleBack = () => {
+    navigate("/")
   }
 
   useEffect(() => {
@@ -130,17 +150,19 @@ const TypingSpeedChecker = () => {
     if (correctWords < 25) {
       return {
         emojiLeft: "🐢",
-        message: "To slow..!! Your like turtle.",
+        message:
+          "Your typing speed is quite slow. Keep practicing to improve your speed!",
       }
-    } else if (correctWords >= 25 && correctWords <= 34) {
+    } else if (correctWords < 50) {
       return {
-        emojiLeft: "⏳",
-        message: "Not bad! Keep practicing.",
+        emojiLeft: "🐇",
+        message:
+          "You're doing well, but there's room for improvement. Keep going!",
       }
     } else {
       return {
         emojiLeft: "🚀",
-        message: "Excellent! You're typing like a pro.",
+        message: "Amazing! You type like a pro. Keep up the great work!",
       }
     }
   }
@@ -163,7 +185,7 @@ const TypingSpeedChecker = () => {
         alignItems: "center",
         justifyContent: "center",
         minHeight: "100vh",
-        backgroundColor: "#f5f5f5",
+        backgroundColor: "#f7f9f5",
         padding: 3,
       }}
     >
@@ -178,7 +200,10 @@ const TypingSpeedChecker = () => {
       <Typography
         gutterBottom
         align='center'
-        sx={{ fontWeight: "bold", fontSize: "60px" }}
+        sx={{
+          fontWeight: "bold",
+          fontSize: { lg: "60px", md: "50px", sm: "40px", xs: "35px" },
+        }}
       >
         Test your typing skills
       </Typography>
@@ -186,19 +211,22 @@ const TypingSpeedChecker = () => {
         sx={{
           display: "flex",
           alignItems: "center",
+          justifyContent: "space-between",
           marginBottom: 2,
+          width: "80%",
         }}
       >
+        <Button
+          variant='outlined'
+          onClick={handleBack}
+          sx={{ marginRight: 1, fontSize: "16px", textTransform: "none" }}
+        >
+          <ArrowBackIcon size={12} /> Back
+        </Button>
         {!startTime && (
           <>
-            <Typography variant='h6' sx={{ marginRight: 1, fontSize: "20px" }}>
-              Start here:
-            </Typography>
-            <Typography
-              variant='body1'
-              sx={{ color: "gray", fontSize: "20px" }}
-            >
-              {words[currentWordIndex]}
+            <Typography variant='h6' sx={{ fontSize: "20px" }}>
+              Start here:{words[currentWordIndex]}
             </Typography>
           </>
         )}
