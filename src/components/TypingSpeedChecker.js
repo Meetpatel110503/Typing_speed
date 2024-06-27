@@ -153,7 +153,7 @@ const TypingSpeedChecker = () => {
         message:
           "Your typing speed is quite slow. Keep practicing to improve your speed!",
       }
-    } else if (correctWords < 50) {
+    } else if (correctWords < 35) {
       return {
         emojiLeft: "🐇",
         message:
@@ -184,7 +184,7 @@ const TypingSpeedChecker = () => {
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        minHeight: "100vh",
+        minHeight: "95vh",
         backgroundColor: "#f7f9f5",
         padding: 3,
       }}
@@ -298,6 +298,7 @@ const TypingSpeedChecker = () => {
         mistakes={mistakes}
         calculateAccuracy={calculateAccuracy}
         correctWords={correctWords}
+        
       />
       <Button
         variant='contained'
@@ -315,6 +316,7 @@ const TypingSpeedChecker = () => {
         mistakes={mistakes}
         correctWords={correctWords}
         handleRestart={handleRestart}
+        timer={timer}
       />
     </Box>
   )

@@ -44,7 +44,7 @@ const LandingPage = () => {
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        minHeight: "100vh",
+        minHeight: "95vh",
         backgroundColor: "#f7f9f5",
         padding: 3,
       }}
@@ -132,7 +132,7 @@ const LandingPage = () => {
               onClick={handleTimerClick}
               endIcon={<ArrowDropDownIcon />}
             >
-              Timer: {selectedTimer}s
+              Timer: {selectedTimer} sec
             </Button>
             <Menu
               anchorEl={anchorElTimer}
