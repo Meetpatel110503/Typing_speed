@@ -6,9 +6,11 @@ import { paragraphs } from "../data"
 import ResultModal from "./Modal"
 import ShowResult from "./ShowResult"
 import ArrowBackIcon from "@mui/icons-material/ArrowBack"
+import { useColor } from "../context/ColorContext"
 
 const TypingSpeedChecker = () => {
   const { difficulty } = useParams()
+  const { outerBgColor } = useColor()
   const location = useLocation()
   const navigate = useNavigate()
   const timer = new URLSearchParams(location.search).get("timer")
@@ -146,27 +148,6 @@ const TypingSpeedChecker = () => {
     })
   }
 
-  const getResultMessage = () => {
-    if (correctWords < 25) {
-      return {
-        emojiLeft: "🐢",
-        message:
-          "Your typing speed is quite slow. Keep practicing to improve your speed!",
-      }
-    } else if (correctWords < 35) {
-      return {
-        emojiLeft: "🐇",
-        message:
-          "You're doing well, but there's room for improvement. Keep going!",
-      }
-    } else {
-      return {
-        emojiLeft: "🚀",
-        message: "Amazing! You type like a pro. Keep up the great work!",
-      }
-    }
-  }
-
   const getTimerColor = () => {
     if (timeLeft > 20) {
       return "black"
@@ -185,7 +166,7 @@ const TypingSpeedChecker = () => {
         alignItems: "center",
         justifyContent: "center",
         minHeight: "95vh",
-        backgroundColor: "#f7f9f5",
+        backgroundColor: outerBgColor,
         padding: 3,
       }}
     >
@@ -298,7 +279,6 @@ const TypingSpeedChecker = () => {
         mistakes={mistakes}
         calculateAccuracy={calculateAccuracy}
         correctWords={correctWords}
-        
       />
       <Button
         variant='contained'
@@ -310,7 +290,6 @@ const TypingSpeedChecker = () => {
       </Button>
       <ResultModal
         open={open}
-        getResultMessage={getResultMessage}
         setOpen={setOpen}
         calculateAccuracy={calculateAccuracy}
         mistakes={mistakes}

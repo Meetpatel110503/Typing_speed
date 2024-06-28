@@ -1,20 +1,29 @@
-// App.js
-import React from "react"
+import React, { lazy, Suspense } from "react"
 import { BrowserRouter, Route, Routes } from "react-router-dom"
-import LandingPage from "./components/LandingPage"
-import TypingSpeedChecker from "./components/TypingSpeedChecker"
+import Loader from "./components/Loading"
+import { ColorProvider } from "./context/ColorContext"
+const LandingPage = lazy(() => import("./components/LandingPage"))
+const TypingSpeedChecker = lazy(() => import("./components/TypingSpeedChecker"))
 
 const App = () => {
   return (
+    <ColorProvider>
     <BrowserRouter>
-      <Routes>
-        <Route path='/' element={<LandingPage />} />
-        <Route
-          path='/typing-test/:difficulty'
-          element={<TypingSpeedChecker />}
-        />
-      </Routes>
+      <Suspense fallback={<Loader />}>
+        <Routes>
+          <Route path='/' element={<LandingPage />} />{" "}
+        </Routes>
+      </Suspense>
+      <Suspense fallback={<Loader />}>
+        <Routes>
+          <Route
+            path='/typing-test/:difficulty'
+            element={<TypingSpeedChecker />}
+          />
+        </Routes>
+      </Suspense>
     </BrowserRouter>
+    </ColorProvider>
   )
 }
 

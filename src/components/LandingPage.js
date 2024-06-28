@@ -2,12 +2,15 @@ import React, { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { Box, Button, Typography, Menu, MenuItem, Grid } from "@mui/material"
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown"
+import { SketchPicker } from "react-color"
+import { useColor } from "../context/ColorContext"
 
 const LandingPage = () => {
   const navigate = useNavigate()
-
+  const { outerBgColor, setOuterBgColor } = useColor()
   const [anchorElDifficulty, setAnchorElDifficulty] = useState(null)
   const [anchorElTimer, setAnchorElTimer] = useState(null)
+  const [anchorElColor, setAnchorElColor] = useState(null)
   const [selectedDifficulty, setSelectedDifficulty] = useState("low")
   const [selectedTimer, setSelectedTimer] = useState(60)
 
@@ -37,6 +40,19 @@ const LandingPage = () => {
     navigate(`/typing-test/${selectedDifficulty}?timer=${selectedTimer}`)
   }
 
+  const handleColorClick = (event) => {
+    setAnchorElColor(event.currentTarget)
+  }
+
+  const handleColorClose = () => {
+    setAnchorElColor(null)
+  }
+
+  const handleColorChange = (color) => {
+    setOuterBgColor(color.hex)
+    setAnchorElColor(null)
+  }
+
   return (
     <Box
       sx={{
@@ -45,7 +61,7 @@ const LandingPage = () => {
         alignItems: "center",
         justifyContent: "center",
         minHeight: "95vh",
-        backgroundColor: "#f7f9f5",
+        backgroundColor: outerBgColor,
         padding: 3,
       }}
     >
@@ -55,7 +71,7 @@ const LandingPage = () => {
           maxWidth: { lg: "900px", md: "800px", sm: "460px", xs: "260px" },
           height: { lg: "460px", md: "420px", sm: "420px", xs: "400px" },
           backgroundColor: "white",
-          boxShadow: 3,
+          boxShadow: 10,
           borderRadius: 4,
           padding: 5,
           textAlign: "center",
@@ -95,6 +111,7 @@ const LandingPage = () => {
               color='primary'
               onClick={handleDifficultyClick}
               endIcon={<ArrowDropDownIcon />}
+              sx={{ textTransform: "none", fontSize: "16px" }}
             >
               Difficulty: {selectedDifficulty}
             </Button>
@@ -110,7 +127,6 @@ const LandingPage = () => {
               >
                 Low
               </MenuItem>
-
               <MenuItem
                 onClick={() => handleDifficultyClose("medium")}
                 sx={{ fontSize: "18px" }}
@@ -131,6 +147,7 @@ const LandingPage = () => {
               color='primary'
               onClick={handleTimerClick}
               endIcon={<ArrowDropDownIcon />}
+              sx={{ textTransform: "none", fontSize: "16px" }}
             >
               Timer: {selectedTimer} sec
             </Button>
@@ -161,7 +178,12 @@ const LandingPage = () => {
             </Menu>
           </Grid>
         </Grid>
-        <Button variant='contained' color='secondary' onClick={handleStart}>
+        <Button
+          variant='contained'
+          color='secondary'
+          onClick={handleStart}
+          sx={{ textTransform: "none", fontSize: "16px" }}
+        >
           Start Test
         </Button>
         <Box
@@ -184,6 +206,48 @@ const LandingPage = () => {
             width: { lg: "220px", md: "220px", sm: "180px", xs: "0px" },
           }}
         />
+      </Box>
+      <Box
+        sx={{
+          position: "absolute",
+          bottom: 20,
+          left: 20,
+          border: "1px solid gray",
+          borderRadius: "10px",
+          padding: "4px",
+        }}
+      >
+        <Button
+          variant='text'
+          color='primary'
+          onClick={handleColorClick}
+          sx={{ textTransform: "none", fontSize: "16px" }}
+        >
+          <Box
+            sx={{
+              width: 20,
+              height: 20,
+              backgroundColor: outerBgColor,
+              borderRadius: "50%",
+              marginRight: 2,
+              border: "1px solid gray",
+            }}
+          />
+          <Typography variant='body2'>{outerBgColor}</Typography>
+        </Button>
+        <Menu
+          anchorEl={anchorElColor}
+          open={Boolean(anchorElColor)}
+          onClose={handleColorClose}
+          sx={{ marginTop: -7 }}
+        >
+          <Box sx={{ padding: 2 }}>
+            <SketchPicker
+              color={outerBgColor}
+              onChangeComplete={handleColorChange}
+            />
+          </Box>
+        </Menu>
       </Box>
     </Box>
   )

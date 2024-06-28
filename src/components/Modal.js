@@ -17,9 +17,36 @@ const ResultModal = ({
   mistakes,
   correctWords,
   handleRestart,
-  getResultMessage,
+
   timer,
 }) => {
+  const getResultMessage = () => {
+    if (correctWords < 20) {
+      return {
+        emojiLeft: "🐌",
+        message:
+          "Your typing speed is too slow. You need to improve your speed!",
+      }
+    } else if (correctWords < 25) {
+      return {
+        emojiLeft: "🐢",
+        message:
+          "Your typing speed is quite slow. Keep practicing to improve your speed!",
+      }
+    } else if (correctWords < 35) {
+      return {
+        emojiLeft: "🐇",
+        message:
+          "Nice,You're doing well, but needed little improvement. Keep going!",
+      }
+    } else {
+      return {
+        emojiLeft: "🚀",
+        message: "Amazing! You type like a pro. Keep up the great work!",
+      }
+    }
+  }
+
   return (
     <Modal open={open} onClose={() => setOpen(false)}>
       <Box
